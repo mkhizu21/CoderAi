@@ -69,6 +69,8 @@ def load_model(path):
     return model
 
 cpp_to_pseudo_model = load_model("CodeToPseudo_transformer.pth")
+pseudo_to_cpp_model = load_model("PseudoToCode_transformer.pth")
+
 
 st.sidebar.write("✅ Models loaded successfully!")
 
@@ -96,6 +98,9 @@ user_input = st.text_area("Enter code:")
 
 if st.button("Translate"):
     tokens = user_input.strip().split()
-    translated_code = translate(cpp_to_pseudo_model, tokens, vocab, config.device)
+    if mode == "C++ to Pseudocode":
+        translated_code = translate(cpp_to_pseudo_model, tokens, vocab, config.device)
+    else:
+        translated_code = translate(pseudo_to_cpp_model, tokens, vocab, config.device)
     st.subheader("Generated Translation:")
     st.code(translated_code, language="cpp" if mode == "Pseudocode to C++" else "python")
